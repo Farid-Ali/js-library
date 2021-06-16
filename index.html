@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Title</title>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <script>
+      let myLibrary = [];
+
+      function Book(title, author, pages, isRead) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.isRead = isRead;
+      }
+
+      Book.prototype.info = function () {
+        let bookReadStatus = this.isRead ? "Read" : "not read yet";
+
+        return `The ${this.title} by ${this.author}, ${this.pages} pages, ${bookReadStatus}`;
+      };
+
+      function addBookToLibrary(title, author, pages, isRead = false) {
+        myLibrary.push(new Book(title, author, pages, isRead));
+        //console.log(myLibrary[0].info());
+      }
+
+      function bookList() {
+        myLibrary.forEach((book) => {
+          console.log(`${book.title} => ${book.author}`);
+        });
+      }
+
+      addBookToLibrary("book one", "author new", 23, true);
+      bookList();
+    </script>
+  </body>
+</html>
