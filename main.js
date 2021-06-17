@@ -45,8 +45,13 @@ function Book(title, author, pages, isRead = false) {
 }
 
 Book.prototype.info = function () {
-  let bookReadStatus = this.isRead ? "Read" : "not read yet";
+  let bookReadStatus = this.isRead ? "Read" : "Not read yet";
   return `The ${this.title} by ${this.author}, ${this.pages} pages, ${bookReadStatus}`;
+};
+
+Book.prototype.readStatus = function () {
+  let bookReadStatus = this.isRead ? "Completed" : "Not read yet";
+  return bookReadStatus;
 };
 
 function addBookToLibrary(book) {
@@ -68,7 +73,7 @@ function showBookList() {
     const content = document.createElement("li");
     content.textContent = `${retrieveBook.title} => ${
       retrieveBook.author
-    } => ${retrieveBook.info()}`;
+    } => ${retrieveBook.readStatus()}`;
     container.appendChild(content);
   });
 }
