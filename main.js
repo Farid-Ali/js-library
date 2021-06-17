@@ -64,15 +64,23 @@ function removeBookFromLibrary(bookIndex) {
   if (index > -1) {
     myLibrary.splice(index, 1);
   }
+  saveMyLibraryToLocalStorage();
+}
 
+function setBookStatus(bookIndex) {
+  const index = parseInt(bookIndex);
+  if (myLibrary[index].isRead) {
+    myLibrary[index].isRead = false;
+  } else {
+    myLibrary[index].isRead = true;
+  }
   saveMyLibraryToLocalStorage();
 }
 
 function showBookList() {
   const container = document.querySelector(".container");
 
-  let bookIndex = 0;
-  myLibrary.forEach((book) => {
+  myLibrary.forEach((book, bookIndex) => {
     //Explanation: LINK https://stackoverflow.com/questions/59274053/preserve-instance-type-when-saving-to-localstorage#:~:text=addNewSkill(%22coding%22)%3B%20%2F%2F,to%20construct%20a%20new%20Employee.
     let retrieveBook = new Book(
       book.title,
@@ -80,27 +88,27 @@ function showBookList() {
       book.pages,
       book.isRead
     );
+
     const content = document.createElement("li");
-    const changeReadStatusBtn = document.createElement("button");
+    const toggleReadStatusBtn = document.createElement("button");
     const deleteButtonBtn = document.createElement("button");
 
-    changeReadStatusBtn.classList.add("read-status-btn");
+    toggleReadStatusBtn.classList.add("read-status-btn");
     deleteButtonBtn.classList.add("del-btn");
 
     content.setAttribute("data-index", bookIndex.toString());
-    changeReadStatusBtn.setAttribute("data-index", bookIndex.toString());
+    toggleReadStatusBtn.setAttribute("data-index", bookIndex.toString());
     deleteButtonBtn.setAttribute("data-index", bookIndex.toString());
 
     content.textContent = `${retrieveBook.title} => ${
       retrieveBook.author
     } => ${retrieveBook.readStatus()}`;
-    changeReadStatusBtn.textContent = "Toggle Read Status";
+    toggleReadStatusBtn.textContent = "Toggle Read Status";
     deleteButtonBtn.textContent = "Delete Book";
 
     container.appendChild(content);
-    container.appendChild(changeReadStatusBtn);
+    container.appendChild(toggleReadStatusBtn);
     container.appendChild(deleteButtonBtn);
-    ++bookIndex;
   });
 }
 
@@ -116,7 +124,7 @@ function createNewBook() {
   });
 }
 
-function deleteBookButton() {
+function deleteBook() {
   const delBtns = document.querySelectorAll(".del-btn");
   delBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -126,6 +134,21 @@ function deleteBookButton() {
   });
 }
 
-createNewBook();
-showBookList();
-deleteBookButton();
+function toggleReadStatus() {
+  const toggleReadStatusBtns = document.querySelectorAll(".read-status-btn");
+  toggleReadStatusBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setBookStatus(btn.getAttribute("data-index"));
+      location.reload();
+    });
+  });
+}
+
+function initLibrary() {
+  createNewBook();
+  showBookList();
+  deleteBook();
+  toggleReadStatus();
+}
+
+initLibrary();
