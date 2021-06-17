@@ -1,76 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Page Title</title>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
   </head>
   <body>
-    <script>
-      let myLibrary = JSON.parse(localStorage.getItem("myLibrary")) || [];
-
-      function checkForStorageAvailablity(type) {
-        let storage;
-        try {
-          storage = window[type];
-          var x = "__storage_test__";
-          storage.setItem(x, x);
-          storage.removeItem(x);
-          return true;
-        } catch (e) {
-          return (
-            e instanceof DOMException &&
-            // everything except Firefox
-            (e.code === 22 ||
-              // Firefox
-              e.code === 1014 ||
-              // test name field too, because code might not be present
-              // everything except Firefox
-              e.name === "QuotaExceededError" ||
-              // Firefox
-              e.name === "NS_ERROR_DOM_QUOTA_REACHED") &&
-            // acknowledge QuotaExceededError only if there's something already stored
-            storage &&
-            storage.length !== 0
-          );
-        }
-      }
-
-      function saveMyLibraryToLocalStorage() {
-        if (checkForStorageAvailablity("localStorage")) {
-          // Yippee! We can use localStorage awesomeness
-          localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
-        } else {
-          // Too bad, no localStorage for us
-          console.log("No local storage for us");
-        }
-      }
-
-      function Book(title, author, pages, isRead) {
-        this.title = title;
-        this.author = author;
-        this.pages = pages;
-        this.isRead = isRead;
-      }
-
-      Book.prototype.info = function () {
-        let bookReadStatus = this.isRead ? "Read" : "not read yet";
-
-        return `The ${this.title} by ${this.author}, ${this.pages} pages, ${bookReadStatus}`;
-      };
-
-      function addBookToLibrary(title, author, pages, isRead = false) {
-        myLibrary.push(new Book(title, author, pages, isRead));
-        saveMyLibraryToLocalStorage();
-      }
-
-      function showBookList() {
-        myLibrary.forEach((book) => {
-          console.log(`${book.title} => ${book.author}`);
-        });
-      }
-
-      addBookToLibrary("book two", "author new", 23, true);
-      showBookList();
-    </script>
+    <h1>Book List</h1>
+    <ol class="container"></ol>
+    <form id="form">
+      <label for="title">Title</label>
+      <input type="text" name="title" /><br />
+      <label for="author">Author</label>
+      <input type="text" name="author" /><br />
+      <label for="pages">Pages</label>
+      <input type="number" name="pages" /><br />
+      <button id="createNewBook" type="submit">Submit</button>
+    </form>
+    <script src="main.js"></script>
   </body>
 </html>
