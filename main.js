@@ -59,9 +59,19 @@ function addBookToLibrary(book) {
   saveMyLibraryToLocalStorage();
 }
 
+function removeBookFromLibrary(bookIndex) {
+  const index = parseInt(bookIndex);
+  if (index > -1) {
+    myLibrary.splice(index, 1);
+  }
+
+  saveMyLibraryToLocalStorage();
+}
+
 function showBookList() {
   const container = document.querySelector(".container");
 
+  let bookIndex = 0;
   myLibrary.forEach((book) => {
     //Explanation: LINK https://stackoverflow.com/questions/59274053/preserve-instance-type-when-saving-to-localstorage#:~:text=addNewSkill(%22coding%22)%3B%20%2F%2F,to%20construct%20a%20new%20Employee.
     let retrieveBook = new Book(
@@ -71,10 +81,26 @@ function showBookList() {
       book.isRead
     );
     const content = document.createElement("li");
+    const changeReadStatusBtn = document.createElement("button");
+    const deleteButtonBtn = document.createElement("button");
+
+    changeReadStatusBtn.classList.add("read-status-btn");
+    deleteButtonBtn.classList.add("del-btn");
+
+    content.setAttribute("data-index", bookIndex.toString());
+    changeReadStatusBtn.setAttribute("data-index", bookIndex.toString());
+    deleteButtonBtn.setAttribute("data-index", bookIndex.toString());
+
     content.textContent = `${retrieveBook.title} => ${
       retrieveBook.author
     } => ${retrieveBook.readStatus()}`;
+    changeReadStatusBtn.textContent = "Toggle Read Status";
+    deleteButtonBtn.textContent = "Delete Book";
+
     container.appendChild(content);
+    container.appendChild(changeReadStatusBtn);
+    container.appendChild(deleteButtonBtn);
+    ++bookIndex;
   });
 }
 
@@ -89,5 +115,17 @@ function createNewBook() {
     addBookToLibrary(createdBook);
   });
 }
+
+function deleteBookButton() {
+  const delBtns = document.querySelectorAll(".del-btn");
+  delBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      removeBookFromLibrary(btn.getAttribute("data-index"));
+      location.reload();
+    });
+  });
+}
+
 createNewBook();
 showBookList();
+deleteBookButton();
